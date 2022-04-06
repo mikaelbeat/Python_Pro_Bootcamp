@@ -1,7 +1,4 @@
 
-from copy import copy
-
-from pkg_resources import PkgResourcesDeprecationWarning
 import Data
 from replit import clear
 
