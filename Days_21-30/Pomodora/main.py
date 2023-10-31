@@ -15,12 +15,39 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 
+REPS = 0
+TIMER = None
+
 # ---------------------------- TIMER RESET ------------------------------- # 
+
+def reset_timer():
+    window.after_cancel(TIMER)
+    canvas.itemconfig(timer_text, text="00:00")
+    title_label.config(text="Timer")
+    check_mark_label(text="")
+    global REPS
+    REPS = 0
+
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
 def start_timer():
-    count_down(5 * 60)
+    global REPS
+    REPS += 1
+    
+    work_sec = WORK_MIN * 60
+    short_break_sec = SHORT_BREAK_MIN * 60
+    long_break_sec = LONG_BREAK_MIN * 60
+    
+    if REPS % 8 == 0:
+        count_down(long_break_sec)
+        title_label.config(text="Break", fg=RED)
+    elif REPS % 2 == 0:
+        count_down(short_break_sec)
+        title_label.config(text="Break", fg=PINK)
+    else:
+        count_down(work_sec)
+        title_label.config(text="Work", fg=GREEN)
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 
@@ -33,7 +60,17 @@ def count_down(count):
     
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
     if count > 0:
-        window.after(1000, count_down, count - 1)
+        global TIMER
+        TIMER = window.after(1000, count_down, count - 1)
+    else:
+        start_timer()
+        marks = ""
+        work_sessions = math.floor(REPS/2)
+        for _ in range(work_sessions):
+            marks += "✓"
+        check_mark_label.config(text=marks)        
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 
 
@@ -58,10 +95,10 @@ start_button = Button(text="Start", font=(
     "Arial", 20, "bold"), command=start_timer)
 start_button.grid(column=0, row=2)
 
-reset_button = Button(text="Reset", font=("Arial", 20, "bold"))
+reset_button = Button(text="Reset", font=("Arial", 20, "bold"), command=reset_timer)
 reset_button.grid(column=2, row=2)
 
-check_mark_label = Label(text=CHECK_MARK, bg=YELLOW, fg=GREEN, font=("Arial", 25, "bold"))
+check_mark_label = Label(bg=YELLOW, fg=GREEN, font=("Arial", 25, "bold"))
 check_mark_label.grid(column=1, row=3)
 
 
