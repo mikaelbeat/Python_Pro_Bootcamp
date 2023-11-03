@@ -1,26 +1,44 @@
 from tkinter import *
+from tkinter import messagebox
 
+import password_generator
 
 LOCK_IMAGE = "Days_21-30/Password_manager/logo.png"
-
-
-
-
-
-
-
+FILE_LOCATION = "Days_21-30/Password_manager/"
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
-
+def generate_password():
+    password_entry.delete(0, END)
+    password = password_generator.generate()
+    password_entry.insert(0, password)
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+
+def save():
+    
+    website_input = website_entry.get()
+    email_input = email_entry.get()
+    password_input = password_entry.get()
+    
+    if len(website_input) or len(password_input) > 0:
+    
+        is_ok = messagebox.askokcancel(title=website_input, message=f"These are the details entered: \nEmail: {email_input}\nPassword: {password_input}\nIs it ok to save?")
+        
+        if is_ok:
+            with open(f"{FILE_LOCATION}passwords.txt", "a") as data_file:
+                data_file.write(f"{website_input} | {email_input} | {password_input}\n")
+                
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
+            
+    else:
+        messagebox.showerror(title="Password Manager", message="Either website or password cannot be empty.")
 
 # ---------------------------- UI SETUP ------------------------------- #
 
-
 window = Tk()
 window.title("Password manager")
-window.config(padx=20, pady=20, bg="white")
+window.config(padx=50, pady=50, bg="white")
 
 canvas = Canvas(width=200, height=200, bg="white", highlightthickness=0)
 lock_img = PhotoImage(file=LOCK_IMAGE)
@@ -38,19 +56,19 @@ password_label.grid(row=3, column=0)
 
 # Entries
 website_entry = Entry(width=35)
-website_entry.grid(row=1, column=1)
+website_entry.grid(row=1, column=1, columnspan=2)
+website_entry.focus()
 email_entry = Entry(width=35)
-email_entry.grid(row=2, column=1)
-password_entry = Entry(width=21)
+email_entry.grid(row=2, column=1, columnspan=2)
+email_entry.insert(0, "demo@gmail.com")
+password_entry = Entry(width=25)
 password_entry.grid(row=3, column=1 )
 
 # Buttons
-generate_password_button = Button(text="Generate Password")
-generate_password_button.grid(row=2, column=2 )
-add_button = Button(text="Add")
-add_button.grid(row=4, column=1)
-
-
+generate_password_button = Button(text="Generate Password", command=generate_password)
+generate_password_button.grid(row=2, column=2)
+add_button = Button(text="Add", width=36, command=save)
+add_button.grid(row=4, column=1, columnspan=2)
 
 
 window.mainloop()
