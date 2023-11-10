@@ -8,12 +8,27 @@ import json
 LOCK_IMAGE = "Days_21-30/Password_manager_JSON/logo.png"
 FILE_LOCATION = "Days_21-30/Password_manager_JSON/"
 
-
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     password_entry.delete(0, END)
     password = password_generator.generate()
     password_entry.insert(0, password)
+    
+# ---------------------------- FIND PASSWORD ------------------------------- #    
+
+def find_password():
+    
+    password_to_find = website_entry.get()
+    
+
+    try:
+        with open(f"{FILE_LOCATION}data.json", "r") as data_file:
+            data = json.load(data_file)
+            print()
+            
+    except:
+        print("EI oo")
+
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
 def save():
@@ -31,19 +46,38 @@ def save():
     
     if len(website_input) or len(password_input) > 0:
         
-        try:
-            with open(f"{FILE_LOCATION}data.json", "r") as data_file:
-                data = json.load(data_file)
-        except FileNotFoundError:
-            with open(f"{FILE_LOCATION}data.json", "w") as data_file:
-                json.dump(new_data, data_file, indent=4)
-        else:
+
+        with open(f"{FILE_LOCATION}data.json", "r") as data_file:
+            data = json.load(data_file)
             data.update(new_data)  
-            with open(f"{FILE_LOCATION}data.json", "w") as data_file:
-                json.dump(new_data, data_file, indent=4)
-        finally:   
-            website_entry.delete(0, END)
-            password_entry.delete(0, END)
+            
+        with open(f"{FILE_LOCATION}data.json", "w") as data_file:
+            json.dump(data, data_file, indent=4)
+        
+        website_entry.delete(0, END)
+        password_entry.delete(0, END)
+        
+        # try:
+        #     print("Try")
+        #     with open(f"{FILE_LOCATION}data.json", "r") as data_file:
+        #         data = json.load(data_file)
+        # except ValueError:
+        #     print("ValueError")
+        #     with open(f"{FILE_LOCATION}data.json", "w") as data_file:
+        #         json.dump(new_data, data_file, indent=4)
+        # except FileNotFoundError:
+        #     print("FileNotFoundError")
+        #     with open(f"{FILE_LOCATION}data.json", "w") as data_file:
+        #         json.dump(new_data, data_file, indent=4)
+        # else:
+        #     print("Else")
+        #     data.update(new_data)  
+        #     with open(f"{FILE_LOCATION}data.json", "w") as data_file:
+        #         json.dump(new_data, data_file, indent=4)
+        # finally:   
+        #     print("Finally")
+        #     website_entry.delete(0, END)
+        #     password_entry.delete(0, END)
             
     else:
         messagebox.showerror(title="Password Manager", message="Either website or password cannot be empty.")
@@ -79,6 +113,8 @@ password_entry = Entry(width=25)
 password_entry.grid(row=3, column=1 )
 
 # Buttons
+website_button = Button(text="Search", command=find_password)
+website_button.grid(row=1, column=2)
 generate_password_button = Button(text="Generate Password", command=generate_password)
 generate_password_button.grid(row=2, column=2)
 add_button = Button(text="Add", width=36, command=save)
