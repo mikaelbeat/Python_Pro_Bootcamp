@@ -22,19 +22,28 @@ TIME = date.strftime("%H:%M")
 
 response = requests.get(url=SHEETY_ENDPOINT)
 result = response.json()
-# pprint(result)
-
 citien_list_size = len(result["prices"]) - 1
-print(citien_list_size)
 
-iataCode_body = {
-    "iataCode": "TESTING"
-}
+
 
 for entry in range(citien_list_size):
-    iataCode = result["prices"][entry]["iataCode"]
+    sheety_id = result["prices"][entry]["id"]
+    city = result["prices"][entry]["city"]
+    iataCode = result["prices"][entry]["code"]
     if iataCode == "":
         print("Oli tyhjä")
-        response = requests.put(url=SHEETY_ENDPOINT + [entry]["iataCode"], json=iataCode_body)
+        new_data = {
+                "price": {
+                    "code": entry["code"]
+                }
+            }
+        
+        response = requests.put(url=f"{SHEETY_ENDPOINT}/{entry}", json=new_data)
     else:
         print("Oli jotain")
+        
+        
+        
+    #         response = requests.put(url=f"{SHEETY_ENDPOINT}/{sheety_id['id']}", json=new_data)
+    # else:
+    #     print("Oli jotain")
