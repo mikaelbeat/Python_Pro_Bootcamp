@@ -50,7 +50,7 @@ headers = {
 
 pixel_data = {
     "date": TODAY,
-    "quantity": "2",
+    "quantity": "10",
     "optionalData": '{"Lanquage": "Python"}'
 }
 
@@ -63,7 +63,7 @@ headers = {
 }
 
 update_pixel = {
-    "quantity": "5"
+    "quantity": "10"
 }
 
 # response = requests.put(url=update_pixel_endpoint, json=update_pixel, headers=headers)

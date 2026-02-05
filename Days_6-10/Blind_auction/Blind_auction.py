@@ -1,5 +1,5 @@
 
-from replit import clear
+from clear_screen import clear
 from Art import logo
 
 
