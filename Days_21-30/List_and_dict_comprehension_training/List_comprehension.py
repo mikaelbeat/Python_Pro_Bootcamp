@@ -1,4 +1,6 @@
 
+#new_list = [new_item for item in list if test]
+
 numbers = [1, 2, 3, 4, 5]
 
 new_numbers = [n + 1 for n in numbers]
